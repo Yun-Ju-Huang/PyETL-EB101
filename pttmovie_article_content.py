@@ -1,5 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+import os
+
+path = './pttmovie'
+if not os.path.exists(path):
+    os.mkdir(path)
 
 url = 'https://www.ptt.cc/bbs/movie/index.html'
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
@@ -23,7 +28,14 @@ for i in range(0, 3):
                         .select('div[id="main-content"]')[0] \
                         .text \
                         .split('--')[0]
-        print(article_content)
+        # print(article_content)
+        try:
+            with open(path + '/%s.txt'%(article_title), 'w', encoding='utf-8') as f:
+                f.write(article_content)
+        except FileNotFoundError as e:
+            with open(path + '/%s.txt'%(article_title.replace('/', '_')), 'w', encoding='utf-8') as f:
+                f.write(article_content)
+
         print(article_title)
         print(article_url)
 
